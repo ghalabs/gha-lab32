@@ -1,0 +1,32 @@
+name: Supply Chain Audit
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Audit the Backend
+      - name: Audit Backend Dependencies
+        run: |
+          echo "Scanning Backend for vulnerabilities..."
+          cd backend
+          npm audit --audit-level=high
+
+      # Audit the Frontend
+      - name: Audit Frontend Dependencies
+        run: |
+          echo "Scanning Frontend for vulnerabilities..."
+          cd frontend
+          npm audit --audit-level=high
